@@ -15,11 +15,11 @@ import android.graphics.RectF
 
 val nodes : Int = 5
 
-fun Canvas.drawSquareNode(i : Int, paint : Paint) {
-    val gap = (Math.min(width, height).toFloat()) / nodes
+fun Canvas.drawSquareNode(i : Int, scale :Float, paint : Paint) {
+    val gap = (Math.min(width, height).toFloat()) / (nodes + 2)
     val size : Float = gap * (i + 1)
     drawAtMid {
-        drawRoundedSquare(0f, 0f, gap, paint)
+        drawRoundedSquare(0f, 0f, size + gap * scale , paint)
     }
 }
 
@@ -31,6 +31,7 @@ fun Canvas.drawAtMid(cb : () -> Unit) {
 }
 
 fun Canvas.drawRoundedSquare(x : Float, y : Float, a : Float, paint : Paint) {
+    paint.style = Paint.Style.STROKE
     save()
     translate(x, y)
     drawRoundRect(RectF(-a/2, -a/2, a/2, a/2), a/5, a/5, paint)
@@ -129,7 +130,7 @@ class LIRView(ctx : Context) : View(ctx) {
         }
 
         fun draw(canvas : Canvas, paint : Paint) {
-            canvas.drawSquareNode(i, paint)
+            canvas.drawSquareNode(i, state.scale, paint)
             next?.draw(canvas, paint)
         }
 
