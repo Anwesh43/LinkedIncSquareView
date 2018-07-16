@@ -99,4 +99,46 @@ class LIRView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    data class IRNode(var i : Int, val state : State = State()) {
+        fun update(stopcb : (Float) -> Unit) {
+            state.update(stopcb)
+        }
+
+        fun startUpdating(startcb : () -> Unit) {
+            state.startUpdating(startcb)
+        }
+
+        private var next : IRNode? = null
+
+        private var prev : IRNode? = null
+
+        fun addNeighbor() {
+            if (i < nodes- 1) {
+                next = IRNode(i + 1)
+                next?.prev = this
+            }
+        }
+
+        init {
+            addNeighbor()
+        }
+
+        fun draw(canvas : Canvas, paint : Paint) {
+            canvas.drawSquareNode(i, paint)
+            next?.draw(canvas, paint)
+        }
+
+        fun getNext(dir : Int, cb : () -> Unit) : IRNode {
+            var curr : IRNode? = prev
+            if (dir == 1) {
+                curr = next
+            }
+            if (curr != null) {
+                return curr
+            }
+            cb()
+            return this
+        }
+    }
 }
