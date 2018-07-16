@@ -9,6 +9,7 @@ import android.content.Context
 import android.view.MotionEvent
 import android.graphics.Paint
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.RectF
 
 val nodes : Int = 5
@@ -159,6 +160,36 @@ class LIRView(ctx : Context) : View(ctx) {
 
         fun startUpdating(startcb : () -> Unit) {
             curr.startUpdating(startcb)
+        }
+
+        fun draw(canvas : Canvas, paint : Paint) {
+            paint.strokeWidth = Math.min(canvas.width, canvas.height).toFloat() / 60
+            paint.strokeCap = Paint.Cap.ROUND
+            curr.draw(canvas, paint)
+        }
+    }
+
+    data class Renderer(var view : LIRView) {
+
+        val lir : LinkedIR = LinkedIR(0)
+
+        val animator : Animator = Animator(view)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(Color.parseColor("#212121"))
+            paint.color = Color.parseColor("#2ecc71")
+            lir.draw(canvas, paint)
+            animator.animate {
+                lir.update {
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            lir.startUpdating {
+                animator.start()
+            }
         }
     }
 }
