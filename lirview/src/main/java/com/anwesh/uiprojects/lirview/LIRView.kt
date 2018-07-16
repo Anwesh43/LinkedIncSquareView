@@ -141,4 +141,24 @@ class LIRView(ctx : Context) : View(ctx) {
             return this
         }
     }
+
+    data class LinkedIR(var i : Int) {
+
+        var curr : IRNode = IRNode(0)
+
+        var dir : Int = 1
+
+        fun update(stopcb : (Float) -> Unit) {
+            curr.update {
+                curr = curr.getNext(dir) {
+                    dir *= -1
+                }
+                stopcb(it)
+            }
+        }
+
+        fun startUpdating(startcb : () -> Unit) {
+            curr.startUpdating(startcb)
+        }
+    }
 }
