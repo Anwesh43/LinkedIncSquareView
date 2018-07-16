@@ -4,6 +4,7 @@ package com.anwesh.uiprojects.lirview
  * Created by anweshmishra on 16/07/18.
  */
 
+import android.app.Activity
 import android.view.View
 import android.content.Context
 import android.view.MotionEvent
@@ -192,6 +193,14 @@ class LIRView(ctx : Context) : View(ctx) {
             lir.startUpdating {
                 animator.start()
             }
+        }
+    }
+
+    companion object {
+        fun create(activity : Activity) : LIRView {
+            val view : LIRView = LIRView(activity)
+            activity.setContentView(view)
+            return view
         }
     }
 }
